@@ -1,0 +1,45 @@
+#:kivy 1.10.0
+
+Manager:
+    Menu:
+        name: 'menu'
+    Game:
+        name: 'game'
+
+<MenuButton@Button>:
+    font_size: '50sp'
+    background_normal: 'img/menuButton.png'
+    background_down: 'img/menuButtonPressed.png'
+    # border: 120, 120, 120, 120
+    border: 50, 50, 50, 50
+    # border: 80, 80, 80, 80
+
+<Menu>:
+    BoxLayout:
+        canvas:
+            Color:
+                rgba: 1, 1, 1, 1
+            Rectangle:
+                size: self.size
+                pos: self.pos
+                source: 'img/menuBackground.png'
+
+        orientation: 'vertical'
+        padding: '200dp', '50dp'
+        spacing: '150dp'
+        Widget:        
+        BoxLayout:
+            padding: '100dp'
+            spacing: '150dp'
+            MenuButton:
+                text: 'Start'
+                on_release: app.root.current = 'game'
+            MenuButton:
+                text: 'Exit'
+                on_release: app.stop()
+
+<Player>:
+    source: 'img/player.png'
+
+<Game>:
+    Player:

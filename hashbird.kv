@@ -42,4 +42,11 @@ Manager:
     source: 'img/player.png'
 
 <Game>:
-    Player:
+    FloatLayout:
+        Player:
+            id: player
+            allow_stretch: True
+            size_hint: None, None
+            size: root.height/15, root.height/15
+            x: root.width/20
+            y: root.height/2

@@ -32,18 +32,41 @@ class Game(Screen):
 
     def on_enter(self, *args):
         """method enter."""
+        # Gravidade
         Clock.schedule_interval(self.update, 1/30)
+
+    def on_pre_enter(self, *args):
+        """method on pre enter."""
+        self.ids.player.y = self.height/2
+        self.ids.player.speed = 0
 
 
     def update(self, *args):
         """method update."""
+
+        # Física do Jogo
         self. ids.player.speed += -self.height * 1/30
         self. ids.player.y += self.ids.player.speed * 1/30
+        
+        # Condição para perde o jogo
+        if self.ids.player.y > self.height or self.ids.player.y < 0:
+            self.gameOver()
+    
+
+    def gameOver(self, *args):
+        """method Game Over."""
+        Clock.unschedule(self.update, 1/30)
+        App.get_running_app().root.current = 'gameOver'
 
 
     def on_touch_down(self, *args):
         """method on touch down."""
         self.ids.player.speed = self.height * 0.7
+
+
+class GameOver(Screen):
+    """Class Game Over."""
+    pass
 
 
 class Player(Image):

@@ -5,6 +5,8 @@ Manager:
         name: 'menu'
     Game:
         name: 'game'
+    GameOver:
+        name: 'gameOver'
 
 <MenuButton@Button>:
     font_size: '50sp'
@@ -50,3 +52,27 @@ Manager:
             size: root.height/15, root.height/15
             x: root.width/20
             y: root.height/2
+
+<GameOver>:
+    BoxLayout:
+        canvas:
+            Color:
+                rgba: 1, 1, 1, 1
+            Rectangle:
+                size: self.size
+                pos: self.pos
+                source: 'img/gameOver.png'
+        orientation: 'vertical' 
+        # padding: '600dp', '70dp'
+        padding: '450dp', '20dp'
+        # spacing: '150dp'
+        spacing: '80dp'
+        Widget:
+            # size_hint_y: 1.5
+            size_hint_y: 1
+        MenuButton:
+            text: 'Try again!'
+            on_release: app.root.current = 'game'            
+        MenuButton:
+            text: 'Exit'
+            on_release: app.stop()

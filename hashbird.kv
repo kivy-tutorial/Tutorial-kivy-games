@@ -76,3 +76,14 @@ Manager:
         MenuButton:
             text: 'Exit'
             on_release: app.stop()
+
+<Obstacle>:
+    canvas:
+        Color:
+            # color do ListProperty
+            rgba: self.color
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    size_hint: None, None
+    width: '80dp'

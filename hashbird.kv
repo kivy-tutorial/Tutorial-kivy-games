@@ -45,6 +45,13 @@ Manager:
 
 <Game>:
     FloatLayout:
+        Label:            
+            text: 'Score: 0'
+            font_size: '70sp'
+            bold: True
+            size_hint_y: None
+            height: self.font_size
+            y: root.height*0.95 - self.height
         Player:
             id: player
             allow_stretch: True
@@ -86,4 +93,4 @@ Manager:
             size: self.size
             pos: self.pos
     size_hint: None, None
-    width: '80dp'
+    width: '100dp'

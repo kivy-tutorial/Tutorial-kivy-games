@@ -17,6 +17,7 @@ from kivy.uix.widget import Widget
 from kivy.clock import Clock
 from kivy.properties import NumericProperty, ListProperty
 from kivy.animation import Animation
+from random import random
 
 
 class Manager(ScreenManager):
@@ -50,21 +51,35 @@ class Game(Screen):
         """method update."""
 
         # Física do Jogo
-        self. ids.player.speed += -self.height * 1/30
+        self. ids.player.speed += -self.height*2 * 1/30
         self. ids.player.y += self.ids.player.speed * 1/30
-        
+
         # Condição para perde o jogo
         if self.ids.player.y > self.height or self.ids.player.y < 0:
             self.gameOver()
-    
+
 
     def putObstacle(self, *args):
         """method put obstacle."""
+        
+        # gap = 200
+        # gap = self.height*0.3    
+        gap = self.height*0.35    
+        # position = 400
+        position = (self.height - gap)*random()
+        widt = self.width*0.05
 
-        # Instace Obstacle class
-        obstacle = Obstacle(x=self.width, height=400)
-        self.add_widget(obstacle)
-        self.obstacles.append(obstacle)
+        # Instace Obstacle class        
+        obstacleLow = Obstacle(x=self.width, height=position, width=widt)
+        obstacleHigh = Obstacle(
+                                x=self.width, 
+                                y=position + gap, 
+                                height=self.height - position - gap, 
+                                width=widt)
+        self.add_widget(obstacleLow, 3)
+        self.add_widget(obstacleHigh, 3)
+        self.obstacles.append(obstacleLow)
+        self.obstacles.append(obstacleHigh)
 
 
     def gameOver(self, *args):
@@ -95,18 +110,14 @@ class Obstacle(Widget):
         """Method init from Obstacle."""
         super().__init__(**kwargs)
         
-        self.anim = Animation(x=-self.height, duration=3)
+        self.anim = Animation(x=-self.width, duration=3)
         self.anim.bind(on_complete=self.vanish)
         self.anim.start(self)
 
     def vanish(self, *args):
         """Method vanish from Obstacle."""
 
-        # if self.parent:
-        #     # parent == Game(Screen)
-        #     self.parent.remove_widget(self)
-
-        # outra forma de fazer
+        # outra forma de fazer remover widget
         gameScreen = App.get_running_app().root.get_screen('game')
         gameScreen.remove_widget(self)
 

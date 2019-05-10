@@ -57,14 +57,18 @@ class Game(Screen):
         # Condição para perde o jogo
         if self.ids.player.y > self.height or self.ids.player.y < 0:
             self.gameOver()
+        
+        # verificar se colideil
+        elif self.playerCollided():
+            self.gameOver()
 
 
     def putObstacle(self, *args):
         """method put obstacle."""
-        
+
         # gap = 200
-        # gap = self.height*0.3    
-        gap = self.height*0.35    
+        # gap = self.height*0.3
+        gap = self.height*0.35
         # position = 400
         position = (self.height - gap)*random()
         widt = self.width*0.05
@@ -72,9 +76,9 @@ class Game(Screen):
         # Instace Obstacle class        
         obstacleLow = Obstacle(x=self.width, height=position, width=widt)
         obstacleHigh = Obstacle(
-                                x=self.width, 
-                                y=position + gap, 
-                                height=self.height - position - gap, 
+                                x=self.width,
+                                y=position + gap,
+                                height=self.height - position - gap,
                                 width=widt)
         self.add_widget(obstacleLow, 3)
         self.add_widget(obstacleHigh, 3)
@@ -88,13 +92,36 @@ class Game(Screen):
         Clock.unschedule(self.putObstacle, 1)
 
         # remove os obstacle da lista obstacles
-        for ob in self.obstacles: 
+        for ob in self.obstacles:
             # cancelar a animação no gameover
             ob.anim.cancel(ob)
             self.remove_widget(ob)
 
         self.obstacles = []
         App.get_running_app().root.current = 'gameOver'
+
+    
+    def collided(self, wid1, wid2):
+        """method Collided."""
+
+        # wid1 = play, wid2 = obstacles 
+        # \ para usar mais de uma linha
+        if wid2.x <= wid1.x + wid1.width and wid2.x + wid2.width >= wid1.x and \
+            wid2.y <= wid1.y + wid1.height and  wid2.y + wid2.height >= wid1.y:
+            return True
+        return False
+
+
+    def playerCollided(self):
+        """method Player Collided."""
+        collided = False 
+
+        for obstacle in self.obstacles:
+            # wid1 = play, wid2 = obstacles 
+            if self.collided(self.ids.player, obstacle):
+                collided = True
+                break
+        return collided
 
 
     def on_touch_down(self, *args):

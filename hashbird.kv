@@ -1,4 +1,5 @@
 #:kivy 1.10.0
+#:import hex kivy.utils.get_color_from_hex
 
 Manager:
     Menu:
@@ -43,10 +44,19 @@ Manager:
 <Player>:
     source: 'img/player.png'
 
-<Game>:
+<Game>:    
+    canvas:
+        Color:
+            rgba: 1, 1, 1, 1
+        Rectangle:
+            size: self.size
+            pos: self.pos
+            source: 'img/gameBackground.png'
     FloatLayout:
         Label:            
-            text: 'Score: 0'
+            text: 'Score: ' + str(int(root.score))
+            # color: [0, 0, 255,1]
+            color:  hex('#0000FF')
             font_size: '70sp'
             bold: True
             size_hint_y: None
@@ -73,7 +83,7 @@ Manager:
         # padding: '600dp', '70dp'
         padding: '450dp', '20dp'
         # spacing: '150dp'
-        spacing: '80dp'
+        spacing: '80dp'        
         Widget:
             # size_hint_y: 1.5
             size_hint_y: 1

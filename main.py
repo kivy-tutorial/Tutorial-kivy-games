@@ -34,9 +34,11 @@ class Game(Screen):
     """Class Game."""
 
     obstacles = []
+    score = NumericProperty(0)
 
     def on_enter(self, *args):
         """method enter."""
+
         # Gravidade
         Clock.schedule_interval(self.update, 1/30)
         Clock.schedule_interval(self.putObstacle, 1)
@@ -45,6 +47,7 @@ class Game(Screen):
         """method on pre enter."""
         self.ids.player.y = self.height/2
         self.ids.player.speed = 0
+        self.score = 0
 
 
     def update(self, *args):
@@ -66,14 +69,13 @@ class Game(Screen):
     def putObstacle(self, *args):
         """method put obstacle."""
 
-        # gap = 200
-        # gap = self.height*0.3
+        # Espaço entre os obstacle superior e inferior
         gap = self.height*0.35
-        # position = 400
+        # distância 
         position = (self.height - gap)*random()
         widt = self.width*0.05
 
-        # Instace Obstacle class        
+        # Instace Obstacle class
         obstacleLow = Obstacle(x=self.width, height=position, width=widt)
         obstacleHigh = Obstacle(
                                 x=self.width,
@@ -100,11 +102,11 @@ class Game(Screen):
         self.obstacles = []
         App.get_running_app().root.current = 'gameOver'
 
-    
+
     def collided(self, wid1, wid2):
         """method Collided."""
 
-        # wid1 = play, wid2 = obstacles 
+        # wid1 = play, wid2 = obstacles
         # \ para usar mais de uma linha
         if wid2.x <= wid1.x + wid1.width and wid2.x + wid2.width >= wid1.x and \
             wid2.y <= wid1.y + wid1.height and  wid2.y + wid2.height >= wid1.y:
@@ -114,10 +116,10 @@ class Game(Screen):
 
     def playerCollided(self):
         """method Player Collided."""
-        collided = False 
+        collided = False
 
         for obstacle in self.obstacles:
-            # wid1 = play, wid2 = obstacles 
+            # wid1 = play, wid2 = obstacles
             if self.collided(self.ids.player, obstacle):
                 collided = True
                 break
@@ -132,28 +134,44 @@ class Game(Screen):
 class Obstacle(Widget):
     """Class Obstacle."""
     color = ListProperty([0.3, 0.2, 0.2, 1])
+    scored = False
+    gameScreen = None
+        
 
     def __init__(self, **kwargs):
         """Method init from Obstacle."""
         super().__init__(**kwargs)
-        
+
         self.anim = Animation(x=-self.width, duration=3)
         self.anim.bind(on_complete=self.vanish)
         self.anim.start(self)
+        # outra forma de fazer remover widget        
+        self.gameScreen = App.get_running_app().root.get_screen('game')
+
+
+    def on_x(self, *args):
+        """Method count score."""
+
+        # se x do obstacle for menor do que a posição x do player
+        # o obstacle utrapassou o player. conta ponto
+        if self.gameScreen:
+            if self.x < self.gameScreen.ids.player.x and not self.scored:            
+                self.gameScreen.score += 0.5   
+                self.scored = True
+
 
     def vanish(self, *args):
         """Method vanish from Obstacle."""
 
         # outra forma de fazer remover widget
-        gameScreen = App.get_running_app().root.get_screen('game')
-        gameScreen.remove_widget(self)
+        self.gameScreen.remove_widget(self)
 
         # Atualizar lista de obstacle
-        gameScreen.obstacles.remove(self)
+        self.gameScreen.obstacles.remove(self)
 
 class GameOver(Screen):
     """Class Game Over."""
-    pass
+    pass    
 
 
 class Player(Image):
